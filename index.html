@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socialista ou Capitalista?</title>
+    <link rel="icon" href="CaSo.png" type="image/x-icon">
+    <style>
+        :root {
+            --socialist: #e63946;
+            --capitalist: #1d3557;
+            --mixed: #2a9d8f;
+            --light: #f1faee;
+            --accent: #a8dadc;
+            --dark: #457b9d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            padding-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--socialist), var(--capitalist));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--capitalist);
+            padding: 1rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .question {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .question h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: var(--capitalist);
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #eee;
+        }
+        
+        .radio-option:hover {
+            background-color: var(--accent);
+            border-color: var(--dark);
+        }
+        
+        .radio-option input {
+            margin-right: 12px;
+            min-width: 16px;
+            min-height: 16px;
+            cursor: pointer;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 1.5rem 0;
+        }
+        
+        button {
+            padding: 1rem 1.5rem;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        #prev-btn {
+            background-color: var(--dark);
+        }
+        
+        #next-btn, #calculate-btn {
+            background: linear-gradient(90deg, var(--socialist), var(--capitalist));
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0.9;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            height: 10px;
+        }
+        
+        #progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--socialist), var(--capitalist));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        #progress-text {
+            text-align: center;
+            font-weight: bold;
+            color: var(--capitalist);
+            margin-bottom: 0.5rem;
+        }
+        
+        #result {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        #result h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            color: var(--capitalist);
+        }
+        
+        .percentage {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .ideology-scale {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+        
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 15px;
+            width: 50%;
+            transition: width 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            position: absolute;
+        }
+        
+        #socialist-bar {
+            background-color: var(--socialist);
+            left: 0;
+            width: 50%;
+        }
+        
+        #capitalist-bar {
+            background-color: var(--capitalist);
+            right: 0;
+            width: 50%;
+        }
+        
+        #result-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        #ideology-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: var(--accent);
+            border-radius: 8px;
+        }
+        
+        .question-group {
+            display: none;
+        }
+        
+        .question-group.active {
+            display: block;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .question {
+                padding: 1rem;
+            }
+            
+            button {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste Político Completo</h1>
+    <div class="intro">
+        <p>Responda as 25 perguntas para descobrir onde suas políticas se posicionam no espectro econômico entre Socialismo e Capitalismo.</p>
+        <p>O teste analisa diferentes dimensões da política econômica para dar um resultado preciso.</p>
+    </div>
+    
+    <div id="progress-text">Pergunta 1 de 25</div>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    
+    <div class="quiz-container">
+        <!-- Grupo 1: Propriedade e Meios de Produção -->
+        <div class="question-group active" id="group-1">
+            <div class="question" id="q1">
+                <h3>1. A propriedade dos meios de produção (fábricas, terras, empresas) deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="0"> Exclusivamente privada, com mínimo controle estatal
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="25"> Predominantemente privada, com regulação estatal
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="50"> Mista, com setores estratégicos estatais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="75"> Majoritariamente pública, com espaço para cooperativas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="100"> Totalmente coletiva, controlada por trabalhadores/Estado
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q2">
+                <h3>2. Grandes corporações e bancos devem ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="0"> Totalmente livres para operar como quiserem
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="25"> Regulados apenas contra práticas ilegais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="50"> Fortemente regulados para proteger consumidores
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="75"> Nacionalizados se forem estratégicos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="100"> Coletivizados sob controle dos trabalhadores
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q3">
+                <h3>3. Sobre pequenas e médias empresas familiares:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q3" value="0"> Devem operar sem interferência estatal
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q3" value="25"> Devem receber incentivos fiscais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q3" value="50"> Devem ser reguladas para proteger trabalhadores
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q3" value="75"> Devem ser convertidas em cooperativas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q3" value="100"> Devem ser coletivizadas
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q4">
+                <h3>4. A propriedade privada de terras deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q4" value="0"> Absoluta e ilimitada
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q4" value="25"> Limitada apenas por zoneamento
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q4" value="50"> Sujeita a reforma agrária moderada
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q4" value="75"> Fortemente limitada em benefício social
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q4" value="100"> Abolida em favor da propriedade coletiva
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q5">
+                <h3>5. Patentes e propriedade intelectual devem ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q5" value="0"> Totalmente protegidas como incentivo à inovação
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q5" value="25"> Protegidas, mas com prazos limitados
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q5" value="50"> Flexibilizadas para medicamentos essenciais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q5" value="75"> Grandemente limitadas em áreas estratégicas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q5" value="100"> Abolidas como bens comuns da humanidade
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grupo 2: Papel do Estado -->
+        <div class="question-group" id="group-2">
+            <div class="question" id="q6">
+                <h3>6. O papel do Estado na economia deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q6" value="0"> Mínimo (apenas segurança e justiça)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q6" value="25"> Limitado (garantir contratos e propriedade)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q6" value="50"> Moderado (regular e corrigir falhas de mercado)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q6" value="75"> Ativo (planejamento econômico setorial)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q6" value="100"> Central (controle total da economia)
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q7">
+                <h3>7. O Estado deve intervir para salvar empresas em crise?</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q7" value="0"> Nunca - que quebrem se forem ineficientes
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q7" value="25"> Raramente - apenas se causarem crise sistêmica
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q7" value="50"> Às vezes - para proteger empregos estratégicos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q7" value="75"> Frequentemente - mas com contrapartidas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q7" value="100"> Sempre - e depois nacionalizá-las
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q8">
+                <h3>8. Bancos centrais e política monetária devem:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q8" value="0"> Ser independentes e focar apenas em inflação
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q8" value="25"> Ter alguma flexibilidade para crises
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q8" value="50"> Considerar também emprego e crescimento
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q8" value="75"> Ser ferramenta ativa de desenvolvimento
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q8" value="100"> Ser totalmente controlada pelo governo
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q9">
+                <h3>9. Empresas estatais devem:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="0"> Não existir - tudo deve ser privatizado
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="25"> Existir apenas em áreas não lucrativas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="50"> Operar em setores estratégicos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="75"> Dominar setores-chave da economia
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="100"> Controlar toda a economia
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q10">
+                <h3>10. O planejamento econômico deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q10" value="0"> Inexistente - apenas o mercado decide
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q10" value="25"> Indireto - através de incentivos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q10" value="50"> Parcial - em áreas estratégicas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q10" value="75"> Amplo - com metas setoriais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q10" value="100"> Total - economia planificada
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grupo 3: Serviços Públicos -->
+        <div class="question-group" id="group-3">
+            <div class="question" id="q11">
+                <h3>11. O sistema de saúde deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q11" value="0"> Totalmente privado
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q11" value="25"> Privado com seguro público para pobres
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q11" value="50"> Misto com opção pública
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q11" value="75"> Público universal com complemento privado
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q11" value="100"> Exclusivamente público e gratuito
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q12">
+                <h3>12. A educação básica deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q12" value="0"> Privada com vouchers para pobres
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q12" value="25"> Pública básica com opção privada
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q12" value="50"> Pública de qualidade para todos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q12" value="75"> Pública universal com investimento maciço
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q12" value="100"> Pública, gratuita e laica em todos os níveis
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q13">
+                <h3>13. Transporte público deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q13" value="0"> Totalmente privatizado
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q13" value="25"> Privado com subsídios para rotas não lucrativas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q13" value="50"> Misto com forte regulação
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q13" value="75"> Público com tarifas acessíveis
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q13" value="100"> Totalmente público e gratuito
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q14">
+                <h3>14. Sobre previdência social:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q14" value="0"> Deve ser privatizada (sistema de capitalização)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q14" value="25"> Mista com contas individuais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q14" value="50"> Pública com idade mínima ajustável
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q14" value="75"> Pública solidária com benefícios generosos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q14" value="100"> Pública universal com aposentadoria precoce
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q15">
+                <h3>15. Serviços de utilidade pública (água, energia) devem ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q15" value="0"> Totalmente privatizados
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q15" value="25"> Privados com forte regulação
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q15" value="50"> Mistos com controle estatal
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q15" value="75"> Estatais com gestão eficiente
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q15" value="100"> Estatais com subsídios para todos
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grupo 4: Distribuição de Riqueza -->
+        <div class="question-group" id="group-4">
+            <div class="question" id="q16">
+                <h3>16. O sistema tributário deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q16" value="0"> Regressivo (impostos menores para ricos)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q16" value="25"> Proporcional (mesma % para todos)
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q16" value="50"> Levemente progressivo
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q16" value="75"> Fortemente progressivo
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q16" value="100"> Confiscatório para os mais ricos
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q17">
+                <h3>17. Heranças devem ser taxadas?</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q17" value="0"> Não - a propriedade é um direito absoluto
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q17" value="25"> Levemente - apenas acima de valores altos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q17" value="50"> Moderadamente - para reduzir privilégios
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q17" value="75"> Fortemente - acima de um limite razoável
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q17" value="100"> Totalmente - herança deve ser coletivizada
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q18">
+                <h3>18. Programas de redistribuição de renda (como bolsa família) devem:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q18" value="0"> Não existir - criam dependência
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q18" value="25"> Ser mínimos e temporários
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q18" value="50"> Existir com contrapartidas
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q18" value="75"> Ser amplos e permanentes
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q18" value="100"> Ser substituídos por renda básica universal
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q19">
+                <h3>19. Salários máximos devem ser limitados por lei?</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q19" value="0"> Nunca - o mercado deve determinar
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q19" value="25"> Apenas no setor público
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q19" value="50"> Em casos extremos de desigualdade
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q19" value="75"> Sim - com limites rigorosos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q19" value="100"> Sim - e a diferença salarial deve ser mínima
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q20">
+                <h3>20. Grandes fortunas devem ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q20" value="0"> Protegidas como incentivo ao empreendedorismo
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q20" value="25"> Taxadas normalmente como qualquer renda
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q20" value="50"> Taxadas adicionalmente acima de certo valor
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q20" value="75"> Fortemente taxadas para reduzir desigualdade
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q20" value="100"> Abolidas - ninguém deve ter fortunas pessoais
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grupo 5: Direitos Trabalhistas -->
+        <div class="question-group" id="group-5">
+            <div class="question" id="q21">
+                <h3>21. Sobre direitos trabalhistas e sindicais:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q21" value="0"> Devem ser flexibilizados para aumentar competitividade
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q21" value="25"> Devem existir, mas sem excessos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q21" value="50"> Devem ser mantidos e fiscalizados
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q21" value="75"> Devem ser ampliados e fortalecidos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q21" value="100"> Devem ser máximos, com controle operário
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q22">
+                <h3>22. A jornada de trabalho deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q22" value="0"> Definida livremente por acordo entre patrão e empregado
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q22" value="25"> Limitada a 48h semanais com flexibilização
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q22" value="50"> Limitada a 40h semanais sem exceções
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q22" value="75"> Reduzida para 36h ou menos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q22" value="100"> Progressivamente reduzida conforme automação avança
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q23">
+                <h3>23. Demissões devem ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q23" value="0"> Livres - o empregador decide sem restrições
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q23" value="25"> Flexíveis - com indenização proporcional
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q23" value="50"> Reguladas - com justa causa ou custo significativo
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q23" value="75"> Restritas - apenas em casos extremos
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q23" value="100"> Controladas pelos trabalhadores
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q24">
+                <h3>24. A participação dos trabalhadores nos lucros deve ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q24" value="0"> Opcional - decisão da empresa
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q24" value="25"> Incentivada por benefícios fiscais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q24" value="50"> Obrigatória acima de certo faturamento
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q24" value="75"> Amplamente distribuída
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q24" value="100"> Total - os trabalhadores devem controlar a empresa
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" id="q25">
+                <h3>25. Greves e protestos trabalhistas devem ser:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q25" value="0"> Restritos ao máximo para não atrapalhar a economia
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q25" value="25"> Permitidos apenas em setores não essenciais
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q25" value="50"> Um direito fundamental com limites razoáveis
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q25" value="75"> Amplamente protegidos como instrumento de luta
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q25" value="100"> Um direito absoluto em qualquer circunstância
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="navigation">
+        <button id="prev-btn" onclick="prevGroup()" disabled>Anterior</button>
+        <button id="next-btn" onclick="nextGroup()">Próximo</button>
+        <button id="calculate-btn" onclick="calculateResult()" style="display: none;">Calcular Resultado</button>
+    </div>
+    
+    <div id="result">
+        <h2>Seu Resultado Político-Econômico</h2>
+        <div class="percentage"><span id="percentage">0</span>% Socialista</div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="socialist-bar">Socialista</div>
+            <div class="progress-bar" id="capitalist-bar">Capitalista</div>
+        </div>
+        
+        <div class="scale-labels">
+            <span>0%</span>
+            <span>25%</span>
+            <span>50%</span>
+            <span>75%</span>
+            <span>100%</span>
+        </div>
+        
+        <div class="ideology-scale">
+            <span>Capitalista</span>
+            <span>Neutro</span>
+            <span>Socialista</span>
+        </div>
+        
+        <div id="result-text"></div>
+        
+        <div id="ideology-description"></div>
+    </div>
+    
+    <script>
+        const totalGroups = 5;
+        const questionsPerGroup = 5;
+        let currentGroup = 1;
+        
+        function updateProgress() {
+            const progress = ((currentGroup - 1) * questionsPerGroup) / (totalGroups * questionsPerGroup) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `Pergunta ${((currentGroup - 1) * questionsPerGroup) + 1} de ${totalGroups * questionsPerGroup}`;
+            
+            // Atualizar botões
+            document.getElementById('prev-btn').disabled = currentGroup === 1;
+            document.getElementById('next-btn').style.display = currentGroup === totalGroups ? 'none' : 'block';
+            document.getElementById('calculate-btn').style.display = currentGroup === totalGroups ? 'block' : 'none';
+        }
+        
+        function showGroup(groupNumber) {
+            document.querySelectorAll('.question-group').forEach(group => {
+                group.classList.remove('active');
+            });
+            document.getElementById(`group-${groupNumber}`).classList.add('active');
+            currentGroup = groupNumber;
+            updateProgress();
+        }
+        
+        function nextGroup() {
+            if (currentGroup < totalGroups) {
+                showGroup(currentGroup + 1);
+            }
+        }
+        
+        function prevGroup() {
+            if (currentGroup > 1) {
+                showGroup(currentGroup - 1);
+            }
+        }
+        
+        function calculateResult() {
+            // Verificar se todas as perguntas foram respondidas
+            let allAnswered = true;
+            document.querySelectorAll('.question').forEach(question => {
+                const inputs = question.querySelectorAll('input[type="radio"]');
+                let answered = false;
+                
+                inputs.forEach(input => {
+                    if (input.checked) answered = true;
+                });
+                
+                if (!answered) allAnswered = false;
+            });
+            
+            if (!allAnswered) {
+                alert('Por favor, responda todas as perguntas antes de ver o resultado.');
+                return;
+            }
+            
+            // Calcular pontuação
+            let socialistScore = 0;
+            const questionCount = document.querySelectorAll('.question').length;
+            const maxScore = questionCount * 100;
+            
+            document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+                socialistScore += parseInt(input.value);
+            });
+            
+            const socialistPercentage = Math.round((socialistScore / maxScore) * 100);
+            const capitalistPercentage = 100 - socialistPercentage;
+            
+            // Atualizar a exibição
+            document.getElementById('percentage').textContent = socialistPercentage;
+            document.getElementById('socialist-bar').style.width = socialistPercentage + '%';
+            document.getElementById('capitalist-bar').style.width = capitalistPercentage + '%';
+            
+            // Ajustar texto nas barras quando forem muito estreitas
+            if (socialistPercentage < 15) {
+                document.getElementById('socialist-bar').textContent = '';
+            } else {
+                document.getElementById('socialist-bar').textContent = socialistPercentage + '%';
+            }
+            
+            if (capitalistPercentage < 15) {
+                document.getElementById('capitalist-bar').textContent = '';
+            } else {
+                document.getElementById('capitalist-bar').textContent = capitalistPercentage + '%';
+            }
+            
+            // Determinar a classificação
+            let ideology, description, color;
+            
+            if (socialistPercentage >= 80) {
+                ideology = "Socialista Revolucionário";
+                description = "Você defende uma transformação radical do sistema econômico, com coletivização dos meios de produção, planejamento central e forte intervenção estatal. Provavelmente acredita que o capitalismo deve ser superado por um sistema socialista ou comunista.";
+                color = "var(--socialist)";
+            } else if (socialistPercentage >= 60) {
+                ideology = "Socialista Democrático";
+                description = "Você apoia uma economia mista com forte presença estatal, amplos direitos trabalhistas e programas sociais robustos. Acredita na democratização da economia e na redução radical das desigualdades, mas dentro de um sistema democrático.";
+                color = "var(--socialist)";
+            } else if (socialistPercentage >= 45) {
+                ideology = "Social-Democrata";
+                description = "Você defende um capitalismo regulado com Estado de bem-estar social, combinando mercado livre com proteções sociais. Acredita em reformas graduais para reduzir desigualdades sem abolir o capitalismo.";
+                color = "var(--mixed)";
+            } else if (socialistPercentage >= 30) {
+                ideology = "Liberal Social";
+                description = "Você prefere um sistema principalmente capitalista, mas aceita alguma intervenção estatal em áreas sociais. Acredita no mercado como principal alocador de recursos, mas com rede de proteção básica.";
+                color = "var(--capitalist)";
+            } else {
+                ideology = "Capitalista Liberal";
+                description = "Você defende um sistema econômico baseado na propriedade privada, livre mercado e mínima intervenção estatal. Acredita que a competição e a iniciativa privada são os melhores motores para o progresso econômico e social.";
+                color = "var(--capitalist)";
+            }
+            
+            // Exibir resultado
+            document.getElementById('result-text').innerHTML = `
+                <strong style="font-size: 1.3rem; color: ${color}">${ideology}</strong>
+            `;
+            
+            document.getElementById('ideology-description').innerHTML = `
+                <p style="background-color: ${color}20; padding: 1.5rem; border-radius: 8px; border-left: 4px solid ${color}">
+                    ${description}
+                </p>
+                <p><strong>Pontuação:</strong> ${socialistPercentage}% Socialista / ${capitalistPercentage}% Capitalista</p>
+            `;
+            
+            document.getElementById('result').style.display = 'block';
+            
+            // Rolagem suave para o resultado
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Inicializar
+        updateProgress();
+    </script>
+</body>
+</html>
